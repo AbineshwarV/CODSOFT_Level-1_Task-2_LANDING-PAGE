@@ -1,0 +1,591 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HMS</title>
+
+    <!-- 
+    - favicon
+  -->
+    <link rel="shortcut icon" href="./favicon.svg" type="image/svg+xml" />
+
+    <!-- 
+    - custom css link
+  -->
+    <link rel="stylesheet" href="./assets/css/style.css" />
+
+    <!-- 
+    - google font link
+  -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700&family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+      integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+  </head>
+
+  <body>
+    <!-- 
+    - #HEADER
+  -->
+  <header>
+    <div class="header-container">
+      <!-- Logo -->
+      <a href="#" class="header-logo">
+        <img src="assets/images/logo2.png" alt="Logo">
+      </a>
+
+      <!-- Navigation Menu -->
+      <nav>
+        <ul class="header-nav-menu">
+          <li><a href="#" class="header-nav-link">Home</a></li>
+          <li><a href="#login" class="header-nav-link">Login</a></li>
+          <li><a href="#services" class="header-nav-link">Services</a></li>
+          <li><a href="#all_doctors" class="header-nav-link">All Doctors</a></li>
+          <li><a href="#contact_us" class="header-nav-link">Contact Us</a></li>
+        </ul>
+      </nav>
+
+      <!-- Appointment Button -->
+      <a href="main/user-login.php" class="btn">Appointment</a>
+
+      <!-- Hamburger Menu -->
+      <div class="hamburger-menu">
+        <input id="menu__toggle" type="checkbox" />
+        <label class="menu__btn" for="menu__toggle">
+          <span></span>
+        </label>
+
+        <ul class="menu__box">
+          <li><a class="menu__item" href="#">Home</a></li>
+          <li><a class="menu__item" href="#login">Login</a></li>
+          <li><a class="menu__item" href="#services">Services</a></li>
+          <li><a class="menu__item" href="#all_doctors">All Doctors</a></li>
+          <li><a class="menu__item" href="#contact_us">Contact Us</a></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+    <!-- 
+        - #SLIDER
+      -->
+      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <main>
+      <article>
+      <section id="container">
+  <div id="slider-container">
+    <ul class="images-container">
+      <li>
+       <img src="./assets/images/slider/cover1.svg">
+      </li>
+      <li>
+      <img src="./assets/images/slider/cover2.svg">
+      </li>
+      <li>
+      <img src="./assets/images/slider/cover3.svg">
+      </li>
+    </ul>
+    <span class="arrow a-left"></span>
+    <span class="arrow a-right"></span>
+    <div class='bullets-container'></div>
+  </div>
+</section>
+<script>
+
+$(document).ready(mySlider);
+
+function mySlider() {
+  var imgNumber,
+    sliderContainerWidth,
+    imgContainer,
+    index,
+    flag = true,
+    speed = 600,
+    bullets = true,
+    auto = true,
+    time = 5000;
+
+  construction();
+  $(window).resize(construction);
+  if (auto) {
+    var handle = setInterval(slideRight, time);
+  }
+
+  function construction() {
+    index = 1;
+    imgNumber = $(".images-container li").length;
+    sliderContainerWidth = Math.round($("#slider-container").width());
+    imgContainer = sliderContainerWidth * imgNumber;
+    $(".images-container").css("width", imgContainer);
+    $(".images-container li").css("width", sliderContainerWidth);
+    $(".images-container").css("margin-left", 0);
+    if (bullets == true) {
+      $(".bullets-container").html("");
+      for (i = 1; i <= imgNumber; i++) {
+        $(".bullets-container").append("<span class='bullet'></span>");
+      }
+      $(".bullet").eq(0).addClass("active");
+    }
+    $(".bullet").click(pagers);
+    $(".a-right").click(slideRight);
+    $(".a-left").click(slideLeft);
+  }
+
+  function pagers() {
+    if (!$(this).hasClass("active")) {
+      var bulletIndex = $(".bullets-container span").index(this) + 1;
+      index = bulletIndex;
+      $(".bullets-container")
+        .find(".bullet")
+        .removeClass("active")
+        .eq(bulletIndex - 1)
+        .addClass("active");
+      $(".images-container").animate(
+        {
+          marginLeft: -sliderContainerWidth * (bulletIndex - 1),
+        },
+        speed
+      );
+    }
+  }
+
+  function slideRight() {
+    var imgContainerLeft = parseInt($(".images-container").css("margin-left"));
+    if (flag) {
+      if (imgContainerLeft == -sliderContainerWidth * (imgNumber - 1)) {
+        index = 1;
+        $(".images-container").animate(
+          {
+            marginLeft: 0,
+          },
+          speed,
+          function () {
+            flag = true;
+          }
+        );
+      } else {
+        index++;
+        $(".images-container").animate(
+          {
+            marginLeft: "-=" + sliderContainerWidth,
+          },
+          speed,
+          function () {
+            flag = true;
+          }
+        );
+      }
+      flag = false;
+      $(".bullets-container")
+        .find(".bullet")
+        .removeClass("active")
+        .eq(index - 1)
+        .addClass("active");
+    }
+  }
+
+  function slideLeft() {
+    var imgContainerLeft = parseInt($(".images-container").css("margin-left"));
+    clearInterval(slideRight, 3000);
+    if (flag) {
+      if (imgContainerLeft == 0) {
+        index = index + (imgNumber - 1);
+        $(".images-container").animate(
+          {
+            marginLeft: -sliderContainerWidth * (imgNumber - 1) + "px",
+          },
+          speed,
+          function () {
+            flag = true;
+          }
+        );
+      } else {
+        index--;
+        $(".images-container").animate(
+          {
+            marginLeft: "+=" + sliderContainerWidth,
+          },
+          speed,
+          function () {
+            flag = true;
+          }
+        );
+      }
+      flag = false;
+      $(".bullets-container")
+        .find(".bullet")
+        .removeClass("active")
+        .eq(index - 1)
+        .addClass("active");
+    }
+  }
+  $("#slider-container .arrow , .bullets-container").hover(
+    function () {
+      clearInterval(handle);
+    },
+    function () {
+      handle = setInterval(slideRight, time);
+    }
+  );
+}
+</script>
+
+        <!-- 
+        - #SERVICE
+      -->
+
+        <section class="service" id="login">
+          <div class="container">
+            <h2 class="h2 section-title">Our Main Service</h2>
+
+            <ul class="service-list">
+              <li>
+                <div class="service-card">
+                  <div class="card-icon">
+                    <img src="./assets/images//services/patient.png" alt="Service icon" />
+                  </div>
+
+                  <h3 class="h3 card-title">
+                    <a>Patient Login</a>
+                  </h3>
+                  <a
+                    href="main/user-login.php"
+                    target="_blank"
+                    class="card-link"
+                  >
+                    <span>Click Here</span>
+
+                    <ion-icon name="arrow-forward-outline"></ion-icon>
+                  </a>
+                </div>
+              </li>
+
+              <li>
+                <div class="service-card">
+                  <div class="card-icon">
+                    <img src="./assets/images/services/doctor.png" alt="Service icon" />
+                  </div>
+
+                  <h3 class="h3 card-title">
+                    <a>Doctors Login</a>
+                  </h3>
+                  <a href="main/doctor" target="_blank" class="card-link">
+                    <span>Click Here</span>
+
+                    <ion-icon name="arrow-forward-outline"></ion-icon>
+                  </a>
+                </div>
+              </li>
+
+              <li>
+                <div class="service-card">
+                  <div class="card-icon">
+                    <img src="./assets/images/services/admin.png" alt="Service icon" />
+                  </div>
+
+                  <h3 class="h3 card-title">
+                    <a>Admin Login</a>
+                  </h3>
+                  <a href="main/admin" target="_blank" class="card-link">
+                    <span>Click Here</span>
+
+                    <ion-icon name="arrow-forward-outline"></ion-icon>
+                  </a>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- 
+        - #SERVICES
+      -->
+
+        <section id="services" class="features">
+          <div class="container">
+            <h2 class="h2 section-title">Our Key Features</h2>
+
+            <ul class="features-list">
+              <li>
+                <a href="#" class="features-card">
+                  <div class="card-icon">
+                    <i class="fa-solid fa-heart"></i>
+                  </div>
+
+                  <h3 class="card-title">Cardiology</h3>
+                </a>
+              </li>
+
+              <li>
+                <a href="#" class="features-card">
+                  <div class="card-icon">
+                    <i class="fa-solid fa-bone"></i>
+                  </div>
+
+                  <h3 class="card-title">Orthopaedic</h3>
+                </a>
+              </li>
+
+              <li>
+                <a href="#" class="features-card">
+                  <div class="card-icon">
+                    <i class="fa-solid fa-brain"></i>
+                  </div>
+                  <h3 class="card-title">Neurology</h3>
+                </a>
+              </li>
+
+              <li>
+                <a href="#" class="features-card">
+                  <div class="card-icon">
+                    <i class="fa-solid fa-tooth"></i>
+                  </div>
+                  <h3 class="card-title">Dentistry</h3>
+                </a>
+              </li>
+
+              <li>
+                <a href="#" class="features-card">
+                  <div class="card-icon">
+                    <i class="fa-solid fa-pills"></i>
+                  </div>
+                  <h3 class="card-title">Pharma Pipeline</h3>
+                </a>
+              </li>
+
+              <li>
+                <a href="#" class="features-card">
+                  <div class="card-icon">
+                    <i class="fa-solid fa-user-doctor"></i>
+                  </div>
+                  <h3 class="card-title">Pharma Team</h3>
+                </a>
+              </li>
+
+              <li>
+                <a href="#" class="features-card">
+                  <div class="card-icon">
+                    <i class="fa-solid fa-kit-medical"></i>
+                  </div>
+                  <h3 class="card-title">High-Quality Treatments</h3>
+                </a>
+              </li>
+
+              <li>
+                <a href="#" class="features-card">
+                  <div class="card-icon">
+                    <i class="fa-solid fa-dna"></i>
+                  </div>
+                  <h3 class="card-title">Genetics</h3>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        <!--
+        #TOP DOCTORSS-->
+        <section class="top-doctors-section" id="all_doctors">
+          <div class="doctors-wrapper">
+            <h2 class="h2 section-title">All Doctors</h2>
+            <p>Top Doctors to Book</p>
+
+            <div class="cards-container">
+              <!-- Doctor Card 1 -->
+              <div class="doctor-card">
+                <div class="image-container">
+                  <img
+                    src="./assets/images/doctor1.jpg"
+                    alt="Doctor Image"
+                  />
+                </div>
+                <div class="status-indicator">
+                  <span class="indicator-circle"></span> Available
+                </div>
+                <h5>Dr. Abineshwar V</h5>
+                <p>Immunologist</p>
+              </div>
+
+              <!-- Doctor Card 2 -->
+              <div class="doctor-card">
+                <div class="image-container">
+                  <img
+                    src="./assets/images/doctor2.jpg"
+                    alt="Doctor Image"
+                  />
+                </div>
+                <div class="status-indicator">
+                  <span class="indicator-circle"></span> Available
+                </div>
+                <h5>Dr. Anto Sam Christ A</h5>
+                <p>Anesthesiologists</p>
+              </div>
+
+              <!-- Doctor Card 3 -->
+              <div class="doctor-card">
+                <div class="image-container">
+                  <img
+                   src="./assets/images/doctor3.jpg"
+                    alt="Doctor Image"
+                  />
+                </div>
+                <div class="status-indicator">
+                  <span class="indicator-circle"></span> Available
+                </div>
+                <h5>Balaji G</h5>
+                <p>Cardiologists</p>
+              </div>
+
+              <!-- Doctor Card 4 -->
+              <div class="doctor-card">
+                <div class="image-container">
+                  <img
+                    src="./assets/images/doctor4.jpg"
+                    alt="Doctor Image"
+                  />
+                </div>
+                <div class="status-indicator">
+                  <span class="indicator-circle"></span> Available
+                </div>
+                <h5>Dr. Balaji P</h5>
+                <p>Dermatologists</p>
+              </div>
+
+              <!-- Doctor Card 5 -->
+              <div class="doctor-card">
+                <div class="image-container">
+                  <img
+                    src="./assets/images/doctor5.jpg"
+                    alt="Doctor Image"
+                  />
+                </div>
+                <div class="status-indicator">
+                  <span class="indicator-circle"></span> Available
+                </div>
+                <h5>Dr. Guruprasad S</h5>
+                <p>Neurologist</p>
+              </div>
+            </div>
+          </div>
+        </section>
+        <!--
+        #CONTACT US-->
+        <section id="contact_us" class="contact-section">
+          <h2 class="h2 section-title">Contact Us</h2>
+          <div class="contact-us-container">
+            <img
+              src="./assets/images/services/contact_us.png"
+              alt="Illustration"
+              class="illustration-image"
+            />
+            <form method="post" id="contactForm" class="contact-form">
+              <div class="cf-ro">
+                <label for="fullname">Enter Name:</label>
+                <input
+                  type="text"
+                  id="fullname"
+                  placeholder="Enter Name"
+                  name="fullname"
+                  class="form-control"
+                  required
+                />
+              </div>
+              <div class="cf-ro">
+                <label for="emailid">Email Address:</label>
+                <input
+                  type="email"
+                  id="emailid"
+                  name="emailid"
+                  placeholder="Enter Email Address"
+                  class="form-control"
+                  required
+                />
+              </div>
+              <div class="cf-ro">
+                <label for="mobileno">Mobile Number:</label>
+                <input
+                  type="tel"
+                  id="mobileno"
+                  name="mobileno"
+                  placeholder="Enter Mobile Number"
+                  class="form-control"
+                  required
+                />
+              </div>
+              <div class="cf-ro">
+                <label for="description">Enter Message:</label>
+                <textarea
+                  rows="4"
+                  id="description"
+                  placeholder="Enter Your Message"
+                  class="form-control"
+                  name="description"
+                  required
+                ></textarea>
+              </div>
+              <div class="cf-ro">
+                <button class="submit-btn" type="submit" name="submit">
+                  Send Message
+                </button>
+              </div>
+            </form>
+          </div>
+        </section>
+ 
+ 
+        <!--- #FOOTER-->
+        <footer class="footer">
+  <div class="container">
+    <div class="footer-row">
+      <div class="footer-column logo-column">
+        <img src="assets/images/logo2.png" alt="Medi Aces Logo" class="footer-small-logo" />
+      </div>
+      <div class="footer-column contact-column">
+        <h2 class="footer-title">Contact Us</h2>
+        <address>
+  
+          <div class="address-description">"Pondicherry"</div>
+          <div class="timing-info">Timing: "24/7"</div>
+          <div class="contact-info">
+            <span class="contact-item">Phone: "7904009858"</span>
+            <span class="contact-separator">|</span>
+            <span class="contact-item">Email: "abineshwarv01@gmail.com"</a></span>
+          </div>
+
+        </address>
+      </div>
+    </div>
+  </div>
+  <div class="copy">
+    <b>Copyright 2024 @ Medi Aces - All Right Reserved.</b>
+  </div>
+</footer>
+
+
+
+
+
+
+
+
+
+        <!-- 
+    - custom js link
+  -->
+        <script src="./assets/js/script.js"></script>
+      </article>
+    </main>
+  </body>
+</html>
